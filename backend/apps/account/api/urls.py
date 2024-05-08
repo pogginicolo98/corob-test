@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
-from .views import LogoutAPIView, UserAPIView
+from .views import LogoutAPIView, UserAPIView, RegisterAPIView
 
 urlpatterns = [
     # JWT authentication
@@ -8,4 +8,5 @@ urlpatterns = [
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('logout/', LogoutAPIView.as_view(), name='logout_api'),
     path('user/', UserAPIView.as_view(), name='user_api'),
+    path('register/', RegisterAPIView.as_view(), name='register_api'),
 ]
