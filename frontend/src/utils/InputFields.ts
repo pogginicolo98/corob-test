@@ -35,10 +35,10 @@ export const passwordConfig = {
 };
 
 export const password2Config = {
-	name: "password",
-	label: "Password",
+	name: "password2",
+	label: "Repeat password",
 	type: "password",
-	id: "password",
+	id: "password2",
 	placeholder: "Type password ...",
 	validation: {
 		required: {
@@ -72,15 +72,15 @@ export const emailConfig = {
 };
 
 export const firstNameConfig = {
-	name: "name",
-	label: "Name",
+	name: "first_name",
+	label: "First name",
 	type: "text",
-	id: "name",
+	id: "first_name",
 	placeholder: "Write your name ...",
 	validation: {
 		required: {
 			value: true,
-			message: "Name is required",
+			message: "First name is required",
 		},
 		maxLength: {
 			value: 30,
@@ -90,51 +90,19 @@ export const firstNameConfig = {
 };
 
 export const lastNameConfig = {
-	name: "name",
-	label: "Name",
+	name: "last_name",
+	label: "Last name",
 	type: "text",
-	id: "name",
-	placeholder: "Write your name ...",
+	id: "last_name",
+	placeholder: "Write your last name ...",
 	validation: {
 		required: {
 			value: true,
-			message: "Name is required",
+			message: "Last name is required",
 		},
 		maxLength: {
 			value: 30,
 			message: "30 characters max",
-		},
-	},
-};
-
-export const descriptionConfig = {
-	name: "description",
-	label: "Description",
-	multiline: true,
-	id: "description",
-	placeholder: "Write description ...",
-	validation: {
-		required: {
-			value: true,
-			message: "Description is required",
-		},
-		maxLength: {
-			value: 200,
-			message: "200 characters max",
-		},
-	},
-};
-
-export const numberConfig = {
-	name: "num",
-	label: "Number",
-	type: "number",
-	id: "num",
-	placeholder: "Write a random number",
-	validation: {
-		required: {
-			value: true,
-			message: "Number is required",
 		},
 	},
 };

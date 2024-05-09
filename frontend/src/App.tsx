@@ -1,7 +1,8 @@
 import AuthProvider from "@providers/AuthProvider";
 import UserProvider from "@providers/UserProvider";
 import Navbar from "@components/Navbar";
-import Routes from "./routes";
+import { Route, Routes } from "react-router-dom";
+import Home from "@pages/Home";
 
 function App() {
 	return (
@@ -10,7 +11,11 @@ function App() {
 				<UserProvider>
 					<>
 						<Navbar />
-						<Routes />
+						<div className="container mt-4">
+							<Routes>
+								<Route path="/" element={<Home />} />
+							</Routes>
+						</div>
 					</>
 				</UserProvider>
 			</AuthProvider>
