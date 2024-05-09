@@ -3,12 +3,12 @@ import {
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { useEffect, useReducer, useState } from "react";
-import { useNavigate, NavigateFunction } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import LoginForm from "@components/LoginForm";
 import SignUpForm from "@components/SignUpForm";
 import Post from "@components/Post";
+import NewPostForm from "@components/NewPostForm";
 import { AxiosResponse } from "axios";
 
 type PostDetail = {
@@ -31,6 +31,7 @@ const Home: React.FC = () => {
 	const [postList, setPostList] = useState<PostDetail[]>([]);
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
+	const [showNewPostForm, setShowNewPostForm] = useState(false);
 
 	const handleShowLogin = () => setShowLogin(true);
 	const handleShowSignUp = () => setShowSignUp(true);
@@ -71,26 +72,43 @@ const Home: React.FC = () => {
 			<h1>Welcome to Twitter!</h1>
 			<div className="mt-4">
 				{accessToken ? (
-					postList?.length > 0 ? (
-						postList.map((post) => (
-							<div className="row justify-content-center">
-								<div className="col-5">
-									<Post
-										className="mb-3"
-										key={post.id}
-										id={post.id}
-										author={post.author}
-										content={post.content}
-										hidden={post.hidden}
-										created_at={post.created_at}
-										onSuccess={retrievePostlist}
-									/>
-								</div>
-							</div>
-						))
-					) : (
-						<h2>Currently, there are no posts available</h2>
-					)
+					<>
+						<Button variant="success" onClick={() => setShowNewPostForm(true)}>
+							New post
+						</Button>
+						{showNewPostForm && (
+							<NewPostForm
+								onSuccess={() => {
+									retrievePostlist();
+									setShowNewPostForm(false);
+								}}
+								onReset={() => setShowNewPostForm(false)}
+							/>
+						)}
+						{postList?.length > 0 ? (
+							<>
+								<h3 className="mt-4 mb-3">Post list</h3>
+								{postList.map((post) => (
+									<div className="row justify-content-center">
+										<div className="col-5">
+											<Post
+												className="mb-3"
+												key={post.id}
+												id={post.id}
+												author={post.author}
+												content={post.content}
+												hidden={post.hidden}
+												created_at={post.created_at}
+												onSuccess={retrievePostlist}
+											/>
+										</div>
+									</div>
+								))}
+							</>
+						) : (
+							<h2>Currently, there are no posts available</h2>
+						)}
+					</>
 				) : (
 					<div className="mt-3">
 						<h3>You must be logged in to view posts</h3>

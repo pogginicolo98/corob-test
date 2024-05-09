@@ -32,7 +32,7 @@ export async function apiCall(
 ): Promise<void> {
 	// Create simple Axios instance
 	const jwtAxiosInstance = axios.create({
-		baseURL: "http://127.0.0.1:8000",
+		baseURL: "http://localhost:8000",
 		timeout: 1000,
 	});
 
@@ -88,7 +88,7 @@ export async function jwtApiCall(
 	}: JWTAPICallParams
 ): Promise<void> {
 	// Create Axios instance with JWT refresh handler
-	const baseUrl = "http://127.0.0.1:8000";
+	const baseUrl = "http://localhost:8000";
 	const jwtAxiosInstance = createJWTAxiosInstance(
 		baseUrl,
 		injectRefresh,
