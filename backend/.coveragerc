@@ -1,0 +1,7 @@
+[run]
+source = .
+
+[report]
+show_missing = True
+skip_covered = True
+omit = manage.py, env_template.py, config/asgi.py, config/wsgi.py
