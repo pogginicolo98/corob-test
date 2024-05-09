@@ -27,3 +27,9 @@ Start docker
 ```bash
 docker compose up
 ```
+
+Open your browser and navigate to:
+
+```
+http://localhost:3000/
+```
