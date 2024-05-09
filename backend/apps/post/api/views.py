@@ -26,7 +26,7 @@ class PostViewSet(ModelViewSet):
 
     def get_queryset(self):
         return Post.objects.exclude(Q(hidden=True), ~Q(author=self.request.user)).order_by(
-            '-updated_at'
+            '-created_at'
         )
 
     def perform_create(self, serializer):

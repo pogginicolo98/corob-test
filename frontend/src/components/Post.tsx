@@ -6,7 +6,7 @@ import {
 import { Input } from "@components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { hiddenConfig, contentConfig } from "@utils/InputFields";
-import { Container, Button, Card } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import { UserContext, useUser } from "@providers/UserProvider";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ interface PostProps {
 	author: string;
 	content: string;
 	hidden: boolean;
+	created_at: string;
 	onSuccess?: () => void;
 }
 
@@ -30,6 +31,7 @@ const Post: React.FC<PostProps> = ({
 	author,
 	content,
 	hidden,
+	created_at,
 	onSuccess,
 }) => {
 	const methods = useForm({
@@ -79,7 +81,7 @@ const Post: React.FC<PostProps> = ({
 											<Input {...hiddenConfig} />
 										</div>
 										<div className="col">
-											<p>{"last_update"}</p>
+											<p className="text-secondary">{created_at}</p>
 										</div>
 									</div>
 									<div className="row justify-content-between">
@@ -105,6 +107,7 @@ const Post: React.FC<PostProps> = ({
 								<div className="row justify-content-end">
 									<div className="col">
 										<Button
+											className="mb-2"
 											type="button"
 											variant="primary"
 											onClick={() => setEditEnabled(true)}
@@ -113,13 +116,23 @@ const Post: React.FC<PostProps> = ({
 										</Button>
 									</div>
 								</div>
-								<div className="row">
+								<div>
 									<p>{content}</p>
+									<div className="text-end">
+										<p className="text-secondary">{created_at}</p>
+									</div>
 								</div>
 							</Card.Text>
 						)
 					) : (
-						<Card.Text>{content}</Card.Text>
+						<Card.Text>
+							<div>
+								<p>{content}</p>
+								<div className="text-end">
+									<p className="text-secondary">{created_at}</p>
+								</div>
+							</div>
+						</Card.Text>
 					)}
 				</Card.Body>
 			</Card>

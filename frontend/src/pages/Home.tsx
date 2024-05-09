@@ -16,6 +16,7 @@ type PostDetail = {
 	author: string;
 	content: string;
 	hidden: boolean;
+	created_at: string;
 };
 
 type PostListResponse = {
@@ -27,7 +28,6 @@ type PostListResponse = {
 
 const Home: React.FC = () => {
 	const { accessToken, authApiCall }: AuthContext = useAuth();
-	const [, forceUpdate] = useReducer((x) => x + 1, 0);
 	const [postList, setPostList] = useState<PostDetail[]>([]);
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
@@ -82,7 +82,8 @@ const Home: React.FC = () => {
 										author={post.author}
 										content={post.content}
 										hidden={post.hidden}
-										onSuccess={forceUpdate}
+										created_at={post.created_at}
+										onSuccess={retrievePostlist}
 									/>
 								</div>
 							</div>

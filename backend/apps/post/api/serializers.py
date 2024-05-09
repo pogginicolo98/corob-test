@@ -15,10 +15,11 @@ class PostSerializer(serializers.ModelSerializer):
     """
 
     author = serializers.StringRelatedField(read_only=True)
+    created_at = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
-        exclude = ['created_at', 'updated_at']
+        exclude = ['updated_at']
 
-    def get_last_update(self, instance):
-        return instance.updated_at.strftime('%d %B %Y')
+    def get_created_at(self, instance):
+        return instance.created_at.strftime('%d %B %Y')
