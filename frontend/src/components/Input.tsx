@@ -13,8 +13,9 @@ interface Input {
 	name: string;
 	label: string;
 	type: HTMLInputTypeAttribute;
+	role?: string;
 	id: string;
-	placeholder: string;
+	placeholder?: string;
 	validation?: RegisterOptions<FieldValues, string>;
 	multiline?: boolean;
 }
@@ -23,6 +24,7 @@ export const Input: React.FC<Input> = ({
 	name,
 	label,
 	type,
+	role,
 	id,
 	placeholder,
 	validation,
@@ -35,7 +37,15 @@ export const Input: React.FC<Input> = ({
 	const inputErrors: FieldErrors<FieldValues> = findInputError(errors, name);
 	const isInvalid: boolean = isFormInvalid(inputErrors);
 	const [inputClassName, setInputClassName] = useState("");
-	const baseInputCss = "form-control";
+	const baseDivCss =
+		role && type === "checkbox"
+			? "form-check form-switch"
+			: type === "checkbox"
+			? "form-check"
+			: "";
+	const baseLabelCss = type === "checkbox" ? "form-check-label" : "form-label";
+	const baseInputCss =
+		type === "checkbox" ? "form-check-input" : "form-control";
 
 	useEffect((): void => {
 		isInvalid
@@ -44,8 +54,8 @@ export const Input: React.FC<Input> = ({
 	}, [inputErrors, isSubmitted]);
 
 	return (
-		<div>
-			<label htmlFor={id} className="form-label">
+		<div className={baseDivCss}>
+			<label htmlFor={id} className={baseLabelCss}>
 				{label}
 			</label>
 			{multiline ? (
@@ -60,6 +70,7 @@ export const Input: React.FC<Input> = ({
 				<input
 					id={id}
 					type={type}
+					role={role}
 					className={cn(baseInputCss, inputClassName)}
 					placeholder={placeholder}
 					{...register(name, validation)}

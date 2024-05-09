@@ -106,3 +106,31 @@ export const lastNameConfig = {
 		},
 	},
 };
+
+export const contentConfig = {
+	name: "content",
+	label: "Message",
+	type: "text",
+	multiline: true,
+	id: "content",
+	placeholder: "Write message ...",
+	validation: {
+		required: {
+			value: true,
+			message: "Message is required",
+		},
+		maxLength: {
+			value: 200,
+			message: "200 characters max",
+		},
+	},
+};
+
+export const hiddenConfig = {
+	name: "hidden",
+	label: "Hide post",
+	type: "checkbox",
+	role: "switch",
+	id: "hidden",
+	validation: {},
+};

@@ -52,45 +52,12 @@ const Navbar = () => {
 				<BootstrapNavbar.Brand href="#home">Twitter</BootstrapNavbar.Brand>
 				<BootstrapNavbar.Toggle />
 				<BootstrapNavbar.Collapse className="justify-content-end">
-					<BootstrapNavbar.Text className="mx-2">
-						Signed in as: {user ? user.username : "Guest"}
-					</BootstrapNavbar.Text>
-					{!accessToken ? (
-						<>
-							<Button
-								className="mx-2"
-								variant="primary"
-								onClick={handleShowLogin}
-							>
-								Login
-							</Button>
-							<Button
-								className="mx-2"
-								variant="primary"
-								onClick={handleShowSignUp}
-							>
-								Sign Up
-							</Button>
-							<Modal show={showLogin} onHide={handleClose} centered>
-								<Modal.Header closeButton>
-									<Modal.Title>Login</Modal.Title>
-								</Modal.Header>
-								<Modal.Body>
-									<LoginForm onSuccess={handleClose} onReset={handleClose} />
-								</Modal.Body>
-							</Modal>
-							<Modal show={showSignUp} onHide={handleClose} centered>
-								<Modal.Header closeButton>
-									<Modal.Title>Sign Up</Modal.Title>
-								</Modal.Header>
-								<Modal.Body>
-									<SignUpForm onSuccess={handleClose} onReset={handleClose} />
-								</Modal.Body>
-							</Modal>
-						</>
-					) : (
-						<Logout />
+					{user && (
+						<BootstrapNavbar.Text className="mx-2">
+							Signed in as: {user.username}
+						</BootstrapNavbar.Text>
 					)}
+					{accessToken && <Logout />}
 				</BootstrapNavbar.Collapse>
 			</Container>
 		</BootstrapNavbar>
