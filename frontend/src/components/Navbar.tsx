@@ -1,4 +1,10 @@
-import { Navbar as BootstrapNavbar, Container } from "react-bootstrap";
+import {
+	Navbar as BootstrapNavbar,
+	Container,
+	Offcanvas,
+	Nav,
+	NavDropdown,
+} from "react-bootstrap";
 import { useUser, UserContext } from "@providers/UserProvider";
 import {
 	useAuth,
@@ -6,24 +12,12 @@ import {
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
 import { useEffect } from "react";
-import LoginForm from "@components/LoginForm";
-import SignUpForm from "@components/SignUpForm";
 import Logout from "@components/Logout";
-import { Modal, Button } from "react-bootstrap";
-import { useState } from "react";
+import { ReactComponent as LogoImg } from "@img/logo.svg";
 
 const Navbar = () => {
 	const { user, setUser }: UserContext = useUser();
 	const { accessToken, authApiCall }: AuthContext = useAuth();
-	const [showLogin, setShowLogin] = useState(false);
-	const [showSignUp, setShowSignUp] = useState(false);
-
-	const handleShowLogin = () => setShowLogin(true);
-	const handleShowSignUp = () => setShowSignUp(true);
-	const handleClose = () => {
-		setShowLogin(false);
-		setShowSignUp(false);
-	};
 
 	useEffect((): void => {
 		if (accessToken) {
@@ -47,18 +41,66 @@ const Navbar = () => {
 	}, [accessToken]);
 
 	return (
-		<BootstrapNavbar className="bg-body-tertiary">
-			<Container>
-				<BootstrapNavbar.Brand href="#home">Twitter</BootstrapNavbar.Brand>
-				<BootstrapNavbar.Toggle />
-				<BootstrapNavbar.Collapse className="justify-content-end">
-					{user && (
-						<BootstrapNavbar.Text className="mx-2">
-							Signed in as: {user.username}
-						</BootstrapNavbar.Text>
-					)}
-					{accessToken && <Logout />}
-				</BootstrapNavbar.Collapse>
+		<BootstrapNavbar fixed="top" expand="md" className="bg-body-tertiary px-3">
+			<Container fluid>
+				<BootstrapNavbar.Brand href="/">
+					<LogoImg
+						height={30}
+						width={30}
+						className="d-inline-block align-top"
+					/>{" "}
+					Twitter
+				</BootstrapNavbar.Brand>
+				<BootstrapNavbar.Toggle aria-controls={"offcanvasNavbar"} />
+				<BootstrapNavbar.Offcanvas
+					id={"offcanvasNavbar"}
+					aria-labelledby={"offcanvasNavbarLabel"}
+					placement="end"
+				>
+					<Offcanvas.Header closeButton>
+						<Offcanvas.Title id={"offcanvasNavbarLabel"}>
+							<LogoImg
+								height={30}
+								width={30}
+								className="d-inline-block align-top"
+							/>{" "}
+							Twitter
+						</Offcanvas.Title>
+					</Offcanvas.Header>
+					<Offcanvas.Body className="d-none d-md-block">
+						<Nav className="justify-content-end flex-grow-1 pe-3">
+							{user && (
+								<>
+									<p className="my-auto">Signed in as:</p>
+									<NavDropdown
+										title={user.username}
+										id={"offcanvasNavbarDropdown"}
+										align="end"
+										className="d-md-node"
+									>
+										<NavDropdown.Item>Profile</NavDropdown.Item>
+										<NavDropdown.Item>
+											<Logout />
+										</NavDropdown.Item>
+									</NavDropdown>
+								</>
+							)}
+						</Nav>
+					</Offcanvas.Body>
+					<Offcanvas.Body className="d-block d-md-none">
+						<Nav className="justify-content-end flex-grow-1 pe-3">
+							{user && (
+								<>
+									<p className="text-center">Signed in as: {user.username}</p>
+									<Nav.Link href="/home">Profile</Nav.Link>
+									<Nav.Link href="">
+										<Logout />
+									</Nav.Link>
+								</>
+							)}
+						</Nav>
+					</Offcanvas.Body>
+				</BootstrapNavbar.Offcanvas>
 			</Container>
 		</BootstrapNavbar>
 	);

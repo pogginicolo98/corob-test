@@ -6,20 +6,18 @@ import Home from "@pages/Home";
 
 function App() {
 	return (
-		<div className="container mt-5">
-			<AuthProvider>
-				<UserProvider>
-					<>
-						<Navbar />
-						<div className="container mt-4">
-							<Routes>
-								<Route path="/" element={<Home />} />
-							</Routes>
-						</div>
-					</>
-				</UserProvider>
-			</AuthProvider>
-		</div>
+		<AuthProvider>
+			<UserProvider>
+				<>
+					<Navbar />
+					<div className="container" style={{ marginTop: "70px" }}>
+						<Routes>
+							<Route path="/" element={<Home />} />
+						</Routes>
+					</div>
+				</>
+			</UserProvider>
+		</AuthProvider>
 	);
 }
 
