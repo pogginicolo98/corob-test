@@ -9,14 +9,13 @@ UserModel = get_user_model()
 
 class RegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
-        required=True, validators=[UnicodeUsernameValidator]
+        required=True,
+        validators=[UnicodeUsernameValidator, UniqueValidator(queryset=UserModel.objects.all())],
     )
     email = serializers.EmailField(
         required=True, validators=[UniqueValidator(queryset=UserModel.objects.all())]
     )
-    password = serializers.CharField(
-        write_only=True, required=True, validators=[validate_password]
-    )
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
@@ -34,9 +33,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."}
-            )
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
