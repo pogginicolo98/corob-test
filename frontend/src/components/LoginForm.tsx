@@ -8,6 +8,7 @@ import { Input } from "@components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { usernameConfig, passwordConfig } from "@utils/InputFields";
 import { Container, Button } from "react-bootstrap";
+import { useState } from "react";
 
 interface Credentials {
 	username: string;
@@ -22,8 +23,11 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onReset }) => {
 	const methods = useForm();
 	const { setAccessToken, setRefreshToken }: AuthContext = useAuth();
+	const [genericError, setGenericError] = useState();
 
 	const handleSubmit = methods.handleSubmit((data) => {
+		setGenericError(undefined);
+
 		const thenCallback = (response: any) => {
 			// Store access and refresh tokens
 			setAccessToken(response.data.access);
@@ -33,12 +37,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onReset }) => {
 
 		const catchCallback = (error: any) => {
 			methods.resetField("password");
-			methods.setError("password", {
-				type: "server",
-				message: error.response?.data?.detail
-					? error.response?.data.detail
-					: error.message,
-			});
+			if (error.response?.data?.detail) {
+				methods.setError("password", {
+					type: "server",
+					message: error.response.data.detail,
+				});
+			} else {
+				error.response?.status >= 500
+					? setGenericError(error.response.statusText)
+					: setGenericError(error.message);
+			}
+
 			console.error("Login failed:", error);
 		};
 
@@ -63,6 +72,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onReset }) => {
 							<Input {...passwordConfig} />
 						</div>
 					</div>
+					{genericError && (
+						<div className="text-center text-danger mt-3">
+							<p>{genericError}</p>
+						</div>
+					)}
 					<div className="d-grid gap-2 d-md-flex justify-content-md-between mt-5">
 						<Button type="submit" variant="primary">
 							Login

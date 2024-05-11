@@ -31,7 +31,7 @@ export function createJWTAxiosInstance(
 		(response) => response,
 		(error) => {
 			// Reject promise if usual error or refresh data are not provided
-			if (error.response.status !== 401 || !refreshToken) {
+			if (error.response?.status !== 401 || !refreshToken) {
 				return Promise.reject(error);
 			}
 

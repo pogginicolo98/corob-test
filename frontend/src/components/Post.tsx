@@ -9,7 +9,6 @@ import { hiddenConfig, contentConfig } from "@utils/InputFields";
 import { Button, Card } from "react-bootstrap";
 import { UserContext, useUser } from "@providers/UserProvider";
 import { useState } from "react";
-import { nanoid } from "nanoid";
 
 interface PostProps {
 	className: string;
@@ -25,6 +24,8 @@ type PostUpdateData = {
 	content: string;
 	hidden: boolean;
 };
+
+type PostFieldNames = "content" | "hidden";
 
 const Post: React.FC<PostProps> = ({
 	className,
@@ -43,24 +44,29 @@ const Post: React.FC<PostProps> = ({
 	});
 	const { authApiCall }: AuthContext = useAuth();
 	const { user }: UserContext = useUser();
+	const [genericError, setGenericError] = useState();
 	const [editEnabled, setEditEnabled] = useState(false);
-	const [inputContent, setInputContent] = useState({
-		...contentConfig,
-		id: nanoid(),
-	});
-	const [inputHidden, setInputHidden] = useState({
-		...hiddenConfig,
-		id: nanoid(),
-	});
 
 	const handleSubmit = methods.handleSubmit((data) => {
+		setGenericError(undefined);
+
 		const thenCallback = (response: any) => {
 			setEditEnabled(false);
 			onSuccess && onSuccess();
 		};
 
 		const catchCallback = (error: any) => {
-			// TODO mostrare errori validazione
+			if (error.response?.status < 500 && error.response.data) {
+				for (let field in error.response.data) {
+					methods.setError(field as PostFieldNames, {
+						types: Object.assign({}, error.response.data[field]),
+					});
+				}
+			} else {
+				error.response?.status >= 500
+					? setGenericError(error.response.statusText)
+					: setGenericError(error.message);
+			}
 			console.error("Edit post failed:", error);
 		};
 
@@ -82,13 +88,18 @@ const Post: React.FC<PostProps> = ({
 						<Card.Body>
 							<FormProvider {...methods}>
 								<form onSubmit={handleSubmit}>
-									<Input {...inputContent} />
+									<Input {...contentConfig} />
 									<div className="row justify-content-between">
 										<div className="col text-start">
-											<Input {...inputHidden} />
+											<Input {...hiddenConfig} />
 										</div>
 										<div className="col text-secondary">{created_at}</div>
 									</div>
+									{genericError && (
+										<div className="text-center text-danger mt-3">
+											<p>{genericError}</p>
+										</div>
+									)}
 									<div className="row justify-content-between">
 										<div className="col">
 											<Button type="submit" variant="primary">

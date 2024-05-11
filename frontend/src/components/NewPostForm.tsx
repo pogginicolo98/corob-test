@@ -7,6 +7,7 @@ import { Input } from "@components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { hiddenConfig, contentConfig } from "@utils/InputFields";
 import { Button, Card } from "react-bootstrap";
+import { useState } from "react";
 
 interface PostProps {
 	className?: string;
@@ -26,20 +27,28 @@ const NewPostForm: React.FC<PostProps> = ({
 }) => {
 	const methods = useForm();
 	const { authApiCall }: AuthContext = useAuth();
+	const [genericError, setGenericError] = useState();
 
 	const handleSubmit = methods.handleSubmit((data) => {
+		setGenericError(undefined);
+
 		const thenCallback = (response: any) => {
 			onSuccess && onSuccess();
 		};
 
 		const catchCallback = (error: any) => {
-			methods.setError("content", {
-				type: "server",
-				message: error.response?.data?.detail
-					? error.response?.data.detail
-					: error.message,
-			});
-			console.error("Edit post failed:", error);
+			if (error.response?.status < 500 && error.response.data) {
+				for (let field in error.response.data) {
+					methods.setError(field, {
+						types: Object.assign({}, error.response.data[field]),
+					});
+				}
+			} else {
+				error.response?.status >= 500
+					? setGenericError(error.response.statusText)
+					: setGenericError(error.message);
+			}
+			console.error("Sending post failed:", error);
 		};
 
 		const authApiCallParams: AuthAPICallParams = {
@@ -64,6 +73,11 @@ const NewPostForm: React.FC<PostProps> = ({
 									<Input {...hiddenConfig} />
 								</div>
 							</div>
+							{genericError && (
+								<div className="text-center text-danger mt-3">
+									<p>{genericError}</p>
+								</div>
+							)}
 							<div className="row justify-content-between">
 								<div className="col">
 									<Button type="submit" variant="primary">

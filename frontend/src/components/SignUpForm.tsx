@@ -59,23 +59,25 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onReset }) => {
 	};
 
 	const handleSubmit = methods.handleSubmit((data) => {
+		setGenericError(undefined);
+
 		const thenCallback = (response: any) => {
 			loginApiCall({ username: data.username, password: data.password });
 		};
 
 		const catchCallback = (error: any) => {
-			if (error.response.status < 500 && error.response?.data) {
+			methods.resetField("password");
+			methods.resetField("password2");
+			if (error.response?.status < 500 && error.response.data) {
 				for (let field in error.response.data) {
-					if (field === "password" || field === "password2") {
-						methods.resetField("password");
-						methods.resetField("password2");
-					}
 					methods.setError(field, {
 						types: Object.assign({}, error.response.data[field]),
 					});
 				}
-			} else if (error.response.status >= 500) {
-				setGenericError(error.response.statusText);
+			} else {
+				error.response?.status >= 500
+					? setGenericError(error.response.statusText)
+					: setGenericError(error.message);
 			}
 			console.error("Sign up failed:", error);
 		};
