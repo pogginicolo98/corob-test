@@ -28,7 +28,7 @@ export const passwordConfig = {
 			message: "Password is required",
 		},
 		minLength: {
-			value: 6,
+			value: 8,
 			message: "min 8 characters",
 		},
 	},
@@ -46,7 +46,7 @@ export const password2Config = {
 			message: "Password is required",
 		},
 		minLength: {
-			value: 6,
+			value: 8,
 			message: "min 8 characters",
 		},
 	},

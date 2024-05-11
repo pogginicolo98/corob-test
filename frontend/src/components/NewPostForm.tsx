@@ -33,7 +33,12 @@ const NewPostForm: React.FC<PostProps> = ({
 		};
 
 		const catchCallback = (error: any) => {
-			// TODO mostrare errori validazione
+			methods.setError("content", {
+				type: "server",
+				message: error.response?.data?.detail
+					? error.response?.data.detail
+					: error.message,
+			});
 			console.error("Edit post failed:", error);
 		};
 

@@ -8,6 +8,7 @@ import {
 } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { nanoid } from "nanoid";
 
 interface Input {
 	name: string;
@@ -76,15 +77,18 @@ export const Input: React.FC<Input> = ({
 					{...register(name, validation)}
 				/>
 			)}
-			{inputErrors.error !== undefined ? (
+			{inputErrors.error?.types !== undefined && isInvalid ? (
 				<AnimatePresence mode="wait" initial={false}>
-					{isInvalid && (
-						<InputError
-							message={inputErrors.error.message as string}
-							key={inputErrors.error.message as string}
-						/>
-					)}
+					<InputErrors
+						messages={Object.values(inputErrors.error.types) as string[]}
+						key={nanoid()}
+					/>
 				</AnimatePresence>
+			) : inputErrors.error !== undefined && isInvalid ? (
+				<InputErrors
+					messages={Object.values([inputErrors.error.message]) as string[]}
+					key={nanoid()}
+				/>
 			) : (
 				<></>
 			)}
@@ -92,8 +96,8 @@ export const Input: React.FC<Input> = ({
 	);
 };
 
-interface InputError {
-	message: string;
+interface InputErrors {
+	messages: string[];
 }
 
 const framerError = {
@@ -103,10 +107,16 @@ const framerError = {
 	transition: { duration: 0.2 },
 };
 
-const InputError = ({ message }: InputError) => {
-	return (
+const InputErrors = ({ messages }: InputErrors) => {
+	return messages.length > 1 ? (
+		<motion.ul className="invalid-feedback" {...framerError}>
+			{messages.map((message) => (
+				<li>{message}</li>
+			))}
+		</motion.ul>
+	) : (
 		<motion.p className="invalid-feedback" {...framerError}>
-			{message}
+			{messages[0]}
 		</motion.p>
 	);
 };

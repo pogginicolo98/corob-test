@@ -11,6 +11,7 @@ import {
 	lastNameConfig,
 } from "@utils/InputFields";
 import { Container, Button } from "react-bootstrap";
+import { useState } from "react";
 
 interface RegisterData {
 	username: string;
@@ -34,6 +35,7 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onReset }) => {
 	const methods = useForm();
 	const { setAccessToken, setRefreshToken }: AuthContext = useAuth();
+	const [genericError, setGenericError] = useState();
 
 	const loginApiCall = (data: Credentials) => {
 		const thenCallback = (response: any) => {
@@ -62,14 +64,19 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onReset }) => {
 		};
 
 		const catchCallback = (error: any) => {
-			//TODO add validation error for each field
-			// methods.resetField("password");
-			// methods.setError("password", {
-			// 	type: "server",
-			// 	message: error.response?.data?.detail
-			// 		? error.response?.data.detail
-			// 		: error.message,
-			// });
+			if (error.response.status < 500 && error.response?.data) {
+				for (let field in error.response.data) {
+					if (field === "password" || field === "password2") {
+						methods.resetField("password");
+						methods.resetField("password2");
+					}
+					methods.setError(field, {
+						types: Object.assign({}, error.response.data[field]),
+					});
+				}
+			} else if (error.response.status >= 500) {
+				setGenericError(error.response.statusText);
+			}
 			console.error("Sign up failed:", error);
 		};
 
@@ -110,6 +117,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onReset }) => {
 							<Input {...lastNameConfig} />
 						</div>
 					</div>
+					{genericError && (
+						<div className="text-center text-danger mt-3">
+							<p>{genericError}</p>
+						</div>
+					)}
 					<div className="d-grid gap-2 d-md-flex justify-content-md-between mt-5">
 						<Button type="submit" variant="primary">
 							Register
