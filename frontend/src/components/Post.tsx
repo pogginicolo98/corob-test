@@ -9,6 +9,7 @@ import { hiddenConfig, contentConfig } from "@utils/InputFields";
 import { Button, Card } from "react-bootstrap";
 import { UserContext, useUser } from "@providers/UserProvider";
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
 interface PostProps {
 	className: string;
@@ -43,6 +44,14 @@ const Post: React.FC<PostProps> = ({
 	const { authApiCall }: AuthContext = useAuth();
 	const { user }: UserContext = useUser();
 	const [editEnabled, setEditEnabled] = useState(false);
+	const [inputContent, setInputContent] = useState({
+		...contentConfig,
+		id: nanoid(),
+	});
+	const [inputHidden, setInputHidden] = useState({
+		...hiddenConfig,
+		id: nanoid(),
+	});
 
 	const handleSubmit = methods.handleSubmit((data) => {
 		const thenCallback = (response: any) => {
@@ -73,10 +82,10 @@ const Post: React.FC<PostProps> = ({
 						<Card.Body>
 							<FormProvider {...methods}>
 								<form onSubmit={handleSubmit}>
-									<Input {...contentConfig} />
+									<Input {...inputContent} />
 									<div className="row justify-content-between">
 										<div className="col text-start">
-											<Input {...hiddenConfig} />
+											<Input {...inputHidden} />
 										</div>
 										<div className="col text-secondary">{created_at}</div>
 									</div>

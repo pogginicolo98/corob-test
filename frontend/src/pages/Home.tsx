@@ -10,6 +10,7 @@ import SignUpForm from "@components/SignUpForm";
 import Post from "@components/Post";
 import NewPostForm from "@components/NewPostForm";
 import { AxiosResponse } from "axios";
+import { nanoid } from "nanoid";
 
 type PostDetail = {
 	id: number;
@@ -78,6 +79,7 @@ const Home: React.FC = () => {
 						</Button>
 						{showNewPostForm && (
 							<NewPostForm
+								className="mt-3"
 								onSuccess={() => {
 									retrievePostlist();
 									setShowNewPostForm(false);
@@ -89,11 +91,10 @@ const Home: React.FC = () => {
 							<>
 								<h3 className="mt-4 mb-3">Post list</h3>
 								{postList.map((post) => (
-									<div className="row justify-content-center">
+									<div key={nanoid()} className="row justify-content-center">
 										<div className="col-5">
 											<Post
 												className="mb-3"
-												key={post.id}
 												id={post.id}
 												author={post.author}
 												content={post.content}

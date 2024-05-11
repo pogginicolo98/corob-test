@@ -53,9 +53,7 @@ const NewPostForm: React.FC<PostProps> = ({
 				<Card.Body>
 					<FormProvider {...methods}>
 						<form onSubmit={handleSubmit} onReset={onReset}>
-							<Card.Text>
-								<Input {...contentConfig} />
-							</Card.Text>
+							<Input {...contentConfig} />
 							<div className="row justify-content-start">
 								<div className="col text-start">
 									<Input {...hiddenConfig} />
