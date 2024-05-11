@@ -68,21 +68,17 @@ const Post: React.FC<PostProps> = ({
 		<div className={className}>
 			<Card>
 				<Card.Header>{author}</Card.Header>
-				<Card.Body>
-					{user?.username === author ? (
-						editEnabled ? (
+				{user?.username === author ? (
+					editEnabled ? (
+						<Card.Body>
 							<FormProvider {...methods}>
 								<form onSubmit={handleSubmit}>
-									<Card.Text>
-										<Input {...contentConfig} />
-									</Card.Text>
+									<Input {...contentConfig} />
 									<div className="row justify-content-between">
 										<div className="col text-start">
 											<Input {...hiddenConfig} />
 										</div>
-										<div className="col">
-											<p className="text-secondary">{created_at}</p>
-										</div>
+										<div className="col text-secondary">{created_at}</div>
 									</div>
 									<div className="row justify-content-between">
 										<div className="col">
@@ -102,39 +98,35 @@ const Post: React.FC<PostProps> = ({
 									</div>
 								</form>
 							</FormProvider>
-						) : (
-							<Card.Text>
-								<div className="row justify-content-end">
-									<div className="col">
-										<Button
-											className="mb-2"
-											type="button"
-											variant="primary"
-											onClick={() => setEditEnabled(true)}
-										>
-											Edit
-										</Button>
-									</div>
-								</div>
-								<div>
-									<p>{content}</p>
-									<div className="text-end">
-										<p className="text-secondary">{created_at}</p>
-									</div>
-								</div>
-							</Card.Text>
-						)
+						</Card.Body>
 					) : (
-						<Card.Text>
-							<div>
-								<p>{content}</p>
-								<div className="text-end">
-									<p className="text-secondary">{created_at}</p>
+						<Card.Body>
+							<div className="row justify-content-end">
+								<div className="col">
+									<Button
+										className="mb-2"
+										type="button"
+										variant="primary"
+										onClick={() => setEditEnabled(true)}
+									>
+										Edit
+									</Button>
 								</div>
 							</div>
+							<Card.Text>{content}</Card.Text>
+							<Card.Text className="text-end text-secondary">
+								{created_at}
+							</Card.Text>
+						</Card.Body>
+					)
+				) : (
+					<Card.Body>
+						<Card.Text>{content}</Card.Text>
+						<Card.Text className="text-end text-secondary">
+							{created_at}
 						</Card.Text>
-					)}
-				</Card.Body>
+					</Card.Body>
+				)}
 			</Card>
 		</div>
 	);
