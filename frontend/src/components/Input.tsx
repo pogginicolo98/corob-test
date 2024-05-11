@@ -32,7 +32,7 @@ export const Input: React.FC<Input> = ({
 }) => {
 	const {
 		register,
-		formState: { errors, isSubmitted },
+		formState: { errors, isSubmitted, isSubmitSuccessful },
 	} = useFormContext();
 	const inputErrors: FieldErrors<FieldValues> = findInputError(errors, name);
 	const isInvalid: boolean = isFormInvalid(inputErrors);
@@ -50,7 +50,7 @@ export const Input: React.FC<Input> = ({
 	useEffect((): void => {
 		isInvalid
 			? setInputClassName("is-invalid")
-			: setInputClassName(isSubmitted ? "is-valid" : "");
+			: setInputClassName(isSubmitted && !isSubmitSuccessful ? "is-valid" : "");
 	}, [inputErrors, isSubmitted]);
 
 	return (
