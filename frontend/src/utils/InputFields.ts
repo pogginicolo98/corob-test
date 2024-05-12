@@ -128,7 +128,7 @@ export const contentConfig = {
 
 export const hiddenConfig = {
 	name: "hidden",
-	label: "Hide post",
+	label: "Hidden",
 	type: "checkbox",
 	role: "switch",
 	id: "hidden",

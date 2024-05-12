@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
 	Navbar as BootstrapNavbar,
 	Container,
@@ -18,6 +19,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
 	const { user, setUser }: UserContext = useUser();
 	const { accessToken, authApiCall }: AuthContext = useAuth();
+	const navigate = useNavigate();
 
 	useEffect((): void => {
 		if (accessToken) {
@@ -78,15 +80,11 @@ const Navbar = () => {
 										align="end"
 										className="d-md-node"
 									>
-										<NavDropdown.Item>
-											<Link className="d-flex" to="profile/">
-												Profile
-											</Link>
+										<NavDropdown.Item onClick={() => navigate("profile/")}>
+											Profile
 										</NavDropdown.Item>
-										<NavDropdown.Item>
-											<Link className="d-flex" to="logout/">
-												Logout
-											</Link>
+										<NavDropdown.Item onClick={() => navigate("logout/")}>
+											Logout
 										</NavDropdown.Item>
 									</NavDropdown>
 								</>

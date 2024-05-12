@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useUser, UserContext } from "@providers/UserProvider";
 import {
 	useAuth,
 	AuthContext,
@@ -16,6 +17,7 @@ const Logout: React.FC = () => {
 		setRefreshToken,
 		authApiCall,
 	}: AuthContext = useAuth();
+	const { user, setUser }: UserContext = useUser();
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
 	const navigate = useNavigate();
@@ -36,6 +38,7 @@ const Logout: React.FC = () => {
 			// Clean access and refresh tokens
 			setAccessToken(null);
 			setRefreshToken(null);
+			setUser(null);
 		};
 
 		const authApiCallParams: AuthAPICallParams = {

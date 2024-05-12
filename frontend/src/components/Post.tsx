@@ -7,8 +7,9 @@ import { Input } from "@components/Input";
 import { FormProvider, useForm } from "react-hook-form";
 import { hiddenConfig, contentConfig } from "@utils/InputFields";
 import { Button, Card } from "react-bootstrap";
-import { UserContext, useUser } from "@providers/UserProvider";
+import { FaPen } from "react-icons/fa";
 import { useState } from "react";
+import { useUser, UserContext } from "@providers/UserProvider";
 
 interface PostProps {
 	className: string;
@@ -49,6 +50,7 @@ const Post: React.FC<PostProps> = ({
 			: undefined
 	);
 	const { authApiCall }: AuthContext = useAuth();
+	const { user }: UserContext = useUser();
 	const [genericError, setGenericError] = useState();
 	const [editEnabled, setEditEnabled] = useState(false);
 
@@ -87,18 +89,39 @@ const Post: React.FC<PostProps> = ({
 	return (
 		<div className={className}>
 			<Card>
-				<Card.Header>{author}</Card.Header>
+				<Card.Header>
+					<div className="d-inline">
+						<div className="row justify-content-between">
+							<div className="col-auto">
+								<span className="text-secondary">Created by: </span>
+								{author === user?.username ? "you" : author}
+							</div>
+							{editable && (
+								<div className="col-auto">
+									<Button
+										className="pb-1 pt-0"
+										variant="secondary"
+										size="sm"
+										onClick={() => setEditEnabled(!editEnabled)}
+									>
+										<FaPen />
+									</Button>
+								</div>
+							)}
+						</div>
+					</div>
+				</Card.Header>
 				{editable ? (
 					editEnabled ? (
 						<Card.Body>
 							<FormProvider {...methods}>
 								<form onSubmit={handleSubmit}>
 									<Input {...contentConfig} />
-									<div className="row justify-content-between">
-										<div className="col text-start">
+									<div className="row justify-content-between my-3">
+										<div className="col-auto text-start">
 											<Input {...hiddenConfig} />
 										</div>
-										<div className="col text-secondary">{created_at}</div>
+										<div className="col-auto text-secondary">{created_at}</div>
 									</div>
 									{genericError && (
 										<div className="text-center text-danger mt-3">
@@ -106,18 +129,18 @@ const Post: React.FC<PostProps> = ({
 										</div>
 									)}
 									<div className="row justify-content-between">
-										<div className="col">
-											<Button type="submit" variant="primary">
+										<div className="col-auto">
+											<Button type="submit" variant="outline-primary">
 												Save
 											</Button>
 										</div>
-										<div className="col">
+										<div className="col-auto">
 											<Button
 												type="button"
-												variant="primary"
+												variant="outline-danger"
 												onClick={() => setEditEnabled(false)}
 											>
-												Cancel
+												Delete
 											</Button>
 										</div>
 									</div>
@@ -126,19 +149,7 @@ const Post: React.FC<PostProps> = ({
 						</Card.Body>
 					) : (
 						<Card.Body>
-							<div className="row justify-content-end">
-								<div className="col">
-									<Button
-										className="mb-2"
-										type="button"
-										variant="primary"
-										onClick={() => setEditEnabled(true)}
-									>
-										Edit
-									</Button>
-								</div>
-							</div>
-							<Card.Text>{content}</Card.Text>
+							<Card.Text className="text-start">{content}</Card.Text>
 							<Card.Text className="text-end text-secondary">
 								{created_at}
 							</Card.Text>
@@ -146,7 +157,7 @@ const Post: React.FC<PostProps> = ({
 					)
 				) : (
 					<Card.Body>
-						<Card.Text>{content}</Card.Text>
+						<Card.Text className="text-start">{content}</Card.Text>
 						<Card.Text className="text-end text-secondary">
 							{created_at}
 						</Card.Text>
