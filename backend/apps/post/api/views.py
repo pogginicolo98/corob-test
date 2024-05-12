@@ -1,18 +1,25 @@
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.mixins import CreateModelMixin, ListModelMixin, UpdateModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    ListModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+)
 
 from apps.post.models import Post
 from apps.post.api.serializers import UserPostSerializer, PublicPostSerializer
 
 
-class UserPostsAPIView(CreateModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet):
+class UserPostsAPIView(
+    CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet
+):
     """
     User's posts ViewSet:
     - Create a new post.
     - List all user's posts
     - Update a specific user's post.
+    - Delete a specific user's post.
 
     * Only authenticated users can perform any action.
     """

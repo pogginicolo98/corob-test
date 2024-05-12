@@ -26,7 +26,7 @@ type PostListResponse = {
 	results: PostDetail[];
 };
 
-const Home: React.FC = () => {
+const Home: React.FC<{}> = () => {
 	const { accessToken, authApiCall }: AuthContext = useAuth();
 	const [postList, setPostList] = useState<PostDetail[]>([]);
 	const [showLogin, setShowLogin] = useState(false);

@@ -86,6 +86,31 @@ const Post: React.FC<PostProps> = ({
 		authApiCall(`/api/post/user/${id}/`, authApiCallParams);
 	});
 
+	const handleDelete = methods.handleSubmit((data) => {
+		setGenericError(undefined);
+
+		const thenCallback = (response: any) => {
+			setEditEnabled(false);
+			onSuccess && onSuccess();
+		};
+
+		const catchCallback = (error: any) => {
+			error.response?.data?.detail
+				? setGenericError(error.response.data.detail)
+				: error.response?.status >= 500
+				? setGenericError(error.response.statusText)
+				: setGenericError(error.message);
+			console.error("Delete post failed:", error);
+		};
+
+		const authApiCallParams: AuthAPICallParams = {
+			method: "DELETE",
+			thenCallback,
+			catchCallback,
+		};
+		authApiCall(`/api/post/user/${id}/`, authApiCallParams);
+	});
+
 	return (
 		<div className={className}>
 			<Card>
@@ -138,7 +163,7 @@ const Post: React.FC<PostProps> = ({
 											<Button
 												type="button"
 												variant="outline-danger"
-												onClick={() => setEditEnabled(false)}
+												onClick={handleDelete}
 											>
 												Delete
 											</Button>
