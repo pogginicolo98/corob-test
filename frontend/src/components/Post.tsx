@@ -17,6 +17,7 @@ interface PostProps {
 	content: string;
 	hidden: boolean;
 	created_at: string;
+	editable: boolean;
 	onSuccess?: () => void;
 }
 
@@ -34,6 +35,7 @@ const Post: React.FC<PostProps> = ({
 	content,
 	hidden,
 	created_at,
+	editable,
 	onSuccess,
 }) => {
 	const methods = useForm({
@@ -83,7 +85,7 @@ const Post: React.FC<PostProps> = ({
 		<div className={className}>
 			<Card>
 				<Card.Header>{author}</Card.Header>
-				{user?.username === author ? (
+				{editable ? (
 					editEnabled ? (
 						<Card.Body>
 							<FormProvider {...methods}>

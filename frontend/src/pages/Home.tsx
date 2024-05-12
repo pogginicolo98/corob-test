@@ -74,22 +74,9 @@ const Home: React.FC = () => {
 			<div className="mt-4">
 				{accessToken ? (
 					<>
-						<Button variant="success" onClick={() => setShowNewPostForm(true)}>
-							New post
-						</Button>
-						{showNewPostForm && (
-							<NewPostForm
-								className="mt-3"
-								onSuccess={() => {
-									retrievePostlist();
-									setShowNewPostForm(false);
-								}}
-								onReset={() => setShowNewPostForm(false)}
-							/>
-						)}
 						{postList?.length > 0 ? (
 							<>
-								<h3 className="mt-4 mb-3">Post list</h3>
+								<h3 className="mt-4 mb-3">Public posts</h3>
 								{postList.map((post) => (
 									<div key={nanoid()} className="row justify-content-center">
 										<div className="col-5">
@@ -100,7 +87,7 @@ const Home: React.FC = () => {
 												content={post.content}
 												hidden={post.hidden}
 												created_at={post.created_at}
-												onSuccess={retrievePostlist}
+												editable={false}
 											/>
 										</div>
 									</div>
