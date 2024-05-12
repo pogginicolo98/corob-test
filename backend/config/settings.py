@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from datetime import timedelta
+from json import loads as json_loads
 from pathlib import Path
+from os import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,14 +23,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '<SECRET_KEY>'
+SECRET_KEY = environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if environ['DEBUG'].lower() == "True".lower() else False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = json_loads(environ['ALLOWED_HOSTS'])
+
+CORS_ALLOW_CREDENTIALS = (
+    True if environ['CORS_ALLOW_CREDENTIALS'].lower() == "True".lower() else False
+)
+CORS_ORIGIN_ALLOW_ALL = (
+    True if environ['CORS_ORIGIN_ALLOW_ALL'].lower() == "True".lower() else False
+)
 
 
 # Application definition
@@ -139,7 +146,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -147,10 +153,14 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 100,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 }
+if environ['ENABLE_SESSION_AUTHENTICATION'].lower() == "True".lower():
+    REST_FRAMEWORK['DEFAULT_AUTHENTICATION_CLASSES'].append(
+        'rest_framework.authentication.SessionAuthentication'
+    )
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=int(environ['ACCESS_TOKEN_MINUTES_LIFETIME'])),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=int(environ['REFRESH_TOKEN_DAYS_LIFETIME'])),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }

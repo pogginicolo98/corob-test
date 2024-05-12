@@ -5,6 +5,11 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/backend
+    env_file:
+      - path: ./backend/default.env
+        required: true # default
+      - path: ./backend/override.env
+        required: false
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   twitter-frontend:
