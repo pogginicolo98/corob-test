@@ -21,7 +21,7 @@ export function createJWTAxiosInstance(
 ) {
 	const axios_instance = axios.create({
 		baseURL: baseUrl,
-		timeout: 5000,
+		timeout: Number(process.env.REACT_APP_AXIOS_TIMEOUT) ?? 1000,
 		headers: accessToken.token
 			? { Authorization: "Bearer " + accessToken.token }
 			: undefined,
