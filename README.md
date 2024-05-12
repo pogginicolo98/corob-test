@@ -31,5 +31,11 @@ docker compose up
 Open your browser and navigate to:
 
 ```
-http://localhost:3000/
+http://localhost/
+```
+
+## Run backend unit tests
+
+```bash
+docker exec twitter-backend sh ./test_coverage.sh
 ```

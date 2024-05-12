@@ -1,5 +1,8 @@
+version: "1.0"
+name: corob-test
 services:
   twitter-backend:
+    container_name: twitter-backend
     build: ./backend
     ports:
       - "8000:8000"
@@ -13,6 +16,7 @@ services:
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
 
   twitter-frontend:
+    container_name: twitter-frontend
     build: ./frontend
     ports:
       - "80:80"
