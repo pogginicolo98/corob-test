@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { FormProvider, useForm } from "react-hook-form";
-import { FaPen } from "react-icons/fa";
+import { FaPen, FaEyeSlash, FaEye } from "react-icons/fa";
 import { Input } from "@components/Input";
 import {
 	useAuth,
@@ -122,16 +122,23 @@ const Post: React.FC<PostProps> = ({
 								{author === user?.username ? "you" : author}
 							</div>
 							{editable && (
-								<div className="col-auto">
-									<Button
-										className="pb-1 pt-0"
-										variant="secondary"
-										size="sm"
-										onClick={() => setEditEnabled(!editEnabled)}
-									>
-										<FaPen />
-									</Button>
-								</div>
+								<>
+									<div className="col-auto">
+										{hidden ? (
+											<FaEyeSlash className="mx-3" />
+										) : (
+											<FaEye className="mx-3" />
+										)}
+										<Button
+											className="pb-1 pt-0"
+											variant="secondary"
+											size="sm"
+											onClick={() => setEditEnabled(!editEnabled)}
+										>
+											<FaPen />
+										</Button>
+									</div>
+								</>
 							)}
 						</div>
 					</div>

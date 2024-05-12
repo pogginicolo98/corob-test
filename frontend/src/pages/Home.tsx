@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { AxiosResponse } from "axios";
 import { nanoid } from "nanoid";
+import NewPostForm from "@components/NewPostForm";
 import LoginForm from "@components/LoginForm";
 import Post from "@components/Post";
 import SignUpForm from "@components/SignUpForm";
@@ -31,6 +32,7 @@ const Home: React.FC<{}> = () => {
 	const [postList, setPostList] = useState<PostDetail[]>([]);
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
+	const [showNewPostForm, setShowNewPostForm] = useState(false);
 
 	const handleShowLogin = () => setShowLogin(true);
 	const handleShowSignUp = () => setShowSignUp(true);
@@ -72,6 +74,27 @@ const Home: React.FC<{}> = () => {
 			<div className="mt-5">
 				{accessToken ? (
 					<>
+						{!showNewPostForm ? (
+							<Button
+								variant="success"
+								onClick={() => setShowNewPostForm(true)}
+							>
+								New post
+							</Button>
+						) : (
+							<div className="row justify-content-center">
+								<div className="col-12 col-md-9 col-lg-7 col-xl-6">
+									<NewPostForm
+										className="mt-3"
+										onSuccess={() => {
+											retrievePostlist();
+											setShowNewPostForm(false);
+										}}
+										onReset={() => setShowNewPostForm(false)}
+									/>
+								</div>
+							</div>
+						)}
 						{postList?.length > 0 ? (
 							<>
 								<h4 className="mt-4 mb-3">Public posts</h4>
