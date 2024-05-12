@@ -8,7 +8,6 @@ import { Modal, Button } from "react-bootstrap";
 import LoginForm from "@components/LoginForm";
 import SignUpForm from "@components/SignUpForm";
 import Post from "@components/Post";
-import NewPostForm from "@components/NewPostForm";
 import { AxiosResponse } from "axios";
 import { nanoid } from "nanoid";
 
@@ -32,7 +31,6 @@ const Home: React.FC = () => {
 	const [postList, setPostList] = useState<PostDetail[]>([]);
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
-	const [showNewPostForm, setShowNewPostForm] = useState(false);
 
 	const handleShowLogin = () => setShowLogin(true);
 	const handleShowSignUp = () => setShowSignUp(true);

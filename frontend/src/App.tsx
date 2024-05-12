@@ -4,6 +4,7 @@ import Navbar from "@components/Navbar";
 import { Route, Routes } from "react-router-dom";
 import Home from "@pages/Home";
 import Profile from "@pages/Profile";
+import Logout from "@pages/Logout";
 
 function App() {
 	return (
@@ -15,6 +16,7 @@ function App() {
 						<Routes>
 							<Route path="/" element={<Home />} />
 							<Route path="profile/" element={<Profile />} />
+							<Route path="logout/" element={<Logout />} />
 						</Routes>
 					</div>
 				</>

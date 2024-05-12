@@ -12,8 +12,8 @@ import {
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
 import { useEffect } from "react";
-import Logout from "@components/Logout";
 import { ReactComponent as LogoImg } from "@img/logo.svg";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
 	const { user, setUser }: UserContext = useUser();
@@ -78,9 +78,15 @@ const Navbar = () => {
 										align="end"
 										className="d-md-node"
 									>
-										<NavDropdown.Item>Profile</NavDropdown.Item>
 										<NavDropdown.Item>
-											<Logout />
+											<Link className="d-flex" to="profile/">
+												Profile
+											</Link>
+										</NavDropdown.Item>
+										<NavDropdown.Item>
+											<Link className="d-flex" to="logout/">
+												Logout
+											</Link>
 										</NavDropdown.Item>
 									</NavDropdown>
 								</>
@@ -92,10 +98,16 @@ const Navbar = () => {
 							{user && (
 								<>
 									<p className="text-center">Signed in as: {user.username}</p>
-									<Nav.Link href="/home">Profile</Nav.Link>
-									<Nav.Link href="">
-										<Logout />
-									</Nav.Link>
+									<Nav.Item>
+										<Link className="d-flex" to="profile/">
+											Profile
+										</Link>
+									</Nav.Item>
+									<Nav.Item className="mt-2">
+										<Link className="d-flex" to="logout/">
+											Logout
+										</Link>
+									</Nav.Item>
 								</>
 							)}
 						</Nav>
