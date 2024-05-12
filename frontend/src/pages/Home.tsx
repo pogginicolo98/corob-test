@@ -55,7 +55,7 @@ const Home: React.FC<{}> = () => {
 			thenCallback,
 			catchCallback,
 		};
-		authApiCall("/api/post/public", requestApiCall);
+		authApiCall("/api/post/public/", requestApiCall);
 	};
 
 	useEffect(() => {
