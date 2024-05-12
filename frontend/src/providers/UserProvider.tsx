@@ -19,7 +19,6 @@ export interface UserContext {
 	setUser: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-// eslint-disable-next-line
 const UserContext = createContext({} as UserContext);
 
 const UserProvider: React.FC<UserProviderProps> = ({ children }) => {

@@ -1,7 +1,9 @@
+import { useState } from "react";
+import { Container, Button } from "react-bootstrap";
+import { FormProvider, useForm } from "react-hook-form";
+import { Input } from "@components/Input";
 import { useAuth, AuthContext } from "@providers/AuthProvider";
 import { apiCall, APICallParams } from "@utils/BackendHelpers";
-import { Input } from "@components/Input";
-import { FormProvider, useForm } from "react-hook-form";
 import {
 	usernameConfig,
 	passwordConfig,
@@ -10,8 +12,6 @@ import {
 	firstNameConfig,
 	lastNameConfig,
 } from "@utils/InputFields";
-import { Container, Button } from "react-bootstrap";
-import { useState } from "react";
 
 interface RegisterData {
 	username: string;

@@ -1,15 +1,15 @@
+import { useEffect, useState } from "react";
+import { Modal, Button } from "react-bootstrap";
+import { AxiosResponse } from "axios";
+import { nanoid } from "nanoid";
+import LoginForm from "@components/LoginForm";
+import Post from "@components/Post";
+import SignUpForm from "@components/SignUpForm";
 import {
 	useAuth,
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import LoginForm from "@components/LoginForm";
-import SignUpForm from "@components/SignUpForm";
-import Post from "@components/Post";
-import { AxiosResponse } from "axios";
-import { nanoid } from "nanoid";
 
 type PostDetail = {
 	id: number;

@@ -1,13 +1,13 @@
+import { useState } from "react";
+import { Button, Card } from "react-bootstrap";
+import { FormProvider, useForm } from "react-hook-form";
+import { Input } from "@components/Input";
 import {
 	useAuth,
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { Input } from "@components/Input";
-import { FormProvider, useForm } from "react-hook-form";
 import { hiddenConfig, contentConfig } from "@utils/InputFields";
-import { Button, Card } from "react-bootstrap";
-import { useState } from "react";
 
 interface PostProps {
 	className?: string;

@@ -1,14 +1,14 @@
-import cn from "classnames";
-import { findInputError, isFormInvalid } from "@utils/ValidationHelpers";
+import { HTMLInputTypeAttribute, useEffect, useState } from "react";
 import {
 	FieldErrors,
 	FieldValues,
 	RegisterOptions,
 	useFormContext,
 } from "react-hook-form";
+import cn from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import { HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { nanoid } from "nanoid";
+import { findInputError, isFormInvalid } from "@utils/ValidationHelpers";
 
 interface Input {
 	name: string;

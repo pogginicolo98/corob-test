@@ -43,7 +43,6 @@ export interface AuthContext {
 	authApiCall: AuthAPICall;
 }
 
-// eslint-disable-next-line
 const AuthContext = createContext({} as AuthContext);
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {

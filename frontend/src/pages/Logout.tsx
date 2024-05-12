@@ -1,14 +1,14 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser, UserContext } from "@providers/UserProvider";
+import { Modal, Button } from "react-bootstrap";
+import LoginForm from "@components/LoginForm";
+import SignUpForm from "@components/SignUpForm";
 import {
 	useAuth,
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { useEffect, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import LoginForm from "@components/LoginForm";
-import SignUpForm from "@components/SignUpForm";
+import { useUser, UserContext } from "@providers/UserProvider";
 
 const Logout: React.FC = () => {
 	const {
@@ -17,7 +17,7 @@ const Logout: React.FC = () => {
 		setRefreshToken,
 		authApiCall,
 	}: AuthContext = useAuth();
-	const { user, setUser }: UserContext = useUser();
+	const { setUser }: UserContext = useUser();
 	const [showLogin, setShowLogin] = useState(false);
 	const [showSignUp, setShowSignUp] = useState(false);
 	const navigate = useNavigate();

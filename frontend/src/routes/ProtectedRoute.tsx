@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@providers/AuthProvider";
-import { useEffect } from "react";
 
 const ProtectedRoute = ({ children }: any) => {
 	const { accessToken } = useAuth();

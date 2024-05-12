@@ -1,10 +1,10 @@
-import AuthProvider from "@providers/AuthProvider";
-import UserProvider from "@providers/UserProvider";
-import Navbar from "@components/Navbar";
 import { Route, Routes } from "react-router-dom";
+import Navbar from "@components/Navbar";
+import AuthProvider from "@providers/AuthProvider";
 import Home from "@pages/Home";
-import Profile from "@pages/Profile";
 import Logout from "@pages/Logout";
+import Profile from "@pages/Profile";
+import UserProvider from "@providers/UserProvider";
 import ProtectedRoute from "@routes/ProtectedRoute";
 
 function App() {

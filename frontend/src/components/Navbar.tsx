@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
 	Navbar as BootstrapNavbar,
 	Container,
@@ -6,15 +6,14 @@ import {
 	Nav,
 	NavDropdown,
 } from "react-bootstrap";
-import { useUser, UserContext } from "@providers/UserProvider";
+import { Link, useNavigate } from "react-router-dom";
+import { ReactComponent as LogoImg } from "@img/logo.svg";
 import {
 	useAuth,
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { useEffect, useState } from "react";
-import { ReactComponent as LogoImg } from "@img/logo.svg";
-import { Link } from "react-router-dom";
+import { useUser, UserContext } from "@providers/UserProvider";
 
 const Navbar = () => {
 	const { user, setUser }: UserContext = useUser();
