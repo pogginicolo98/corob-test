@@ -128,7 +128,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onReset }) => {
 						<Button type="submit" variant="primary">
 							Register
 						</Button>
-						<Button type="reset" variant="primary">
+						<Button type="reset" variant="outline-primary">
 							Cancel
 						</Button>
 					</div>

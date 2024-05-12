@@ -68,8 +68,8 @@ const NewPostForm: React.FC<PostProps> = ({
 					<FormProvider {...methods}>
 						<form onSubmit={handleSubmit} onReset={onReset}>
 							<Input {...contentConfig} />
-							<div className="row justify-content-start">
-								<div className="col text-start">
+							<div className="row justify-content-start my-3">
+								<div className="col-auto text-start">
 									<Input {...hiddenConfig} />
 								</div>
 							</div>
@@ -79,13 +79,13 @@ const NewPostForm: React.FC<PostProps> = ({
 								</div>
 							)}
 							<div className="row justify-content-between">
-								<div className="col">
+								<div className="col-auto">
 									<Button type="submit" variant="primary">
 										Send
 									</Button>
 								</div>
-								<div className="col">
-									<Button type="reset" variant="primary">
+								<div className="col-auto">
+									<Button type="reset" variant="outline-primary">
 										Cancel
 									</Button>
 								</div>

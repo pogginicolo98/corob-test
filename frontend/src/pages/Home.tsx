@@ -69,15 +69,15 @@ const Home: React.FC<{}> = () => {
 	return (
 		<div className="text-center">
 			<h1>Welcome to Twitter!</h1>
-			<div className="mt-4">
+			<div className="mt-5">
 				{accessToken ? (
 					<>
 						{postList?.length > 0 ? (
 							<>
-								<h3 className="mt-4 mb-3">Public posts</h3>
+								<h4 className="mt-4 mb-3">Public posts</h4>
 								{postList.map((post) => (
 									<div key={nanoid()} className="row justify-content-center">
-										<div className="col-5">
+										<div className="col-12 col-md-8 col-lg-6 col-xl-5">
 											<Post
 												className="mb-3"
 												id={post.id}
@@ -95,9 +95,9 @@ const Home: React.FC<{}> = () => {
 						)}
 					</>
 				) : (
-					<div className="mt-3">
-						<h3>You must be logged in to view posts</h3>
-						<div className="row justify-content-center">
+					<div className="mt-5">
+						<h4>You must be logged in to view posts</h4>
+						<div className="row justify-content-center mt-4">
 							<div className="col-12 col-md-5 col-lg-3">
 								<div className="d-grid gap-2">
 									<Button size="lg" variant="primary" onClick={handleShowLogin}>

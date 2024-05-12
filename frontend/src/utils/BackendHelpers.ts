@@ -33,7 +33,7 @@ export async function apiCall(
 	// Create simple Axios instance
 	const jwtAxiosInstance = axios.create({
 		baseURL: "http://localhost:8000",
-		timeout: 1000,
+		timeout: 5000,
 	});
 
 	// Create HTTP request with provided parameters

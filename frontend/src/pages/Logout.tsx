@@ -30,35 +30,35 @@ const Logout: React.FC = () => {
 	};
 
 	useEffect(() => {
-		const catchCallback = (error: any) => {
-			console.error("Logout failed:", error);
-		};
+		if (refreshToken) {
+			const catchCallback = (error: any) => {
+				console.error("Logout failed:", error);
+			};
 
-		const finallyCallback = () => {
-			// Clean access and refresh tokens
-			setAccessToken(null);
-			setRefreshToken(null);
-			setUser(null);
-		};
+			const finallyCallback = () => {
+				// Clean access and refresh tokens
+				setAccessToken(null);
+				setRefreshToken(null);
+				setUser(null);
+			};
 
-		const authApiCallParams: AuthAPICallParams = {
-			method: "POST",
-			data: { refresh: refreshToken },
-			injectRefresh: true,
-			catchCallback,
-			finallyCallback,
-		};
-		authApiCall("/api/account/logout/", authApiCallParams);
-	});
+			const authApiCallParams: AuthAPICallParams = {
+				method: "POST",
+				data: { refresh: refreshToken },
+				injectRefresh: true,
+				catchCallback,
+				finallyCallback,
+			};
+			authApiCall("/api/account/logout/", authApiCallParams);
+		}
+	}, []);
 
 	return (
-		<>
-			<div className="text-center">
-				<h1>You successfully logged out!</h1>
-			</div>
-			<div className="mt-5 text-center">
+		<div className="text-center">
+			<h1>You successfully logged out!</h1>
+			<div className="mt-5">
 				<h4>Reister or log in again to access the homepage</h4>
-				<div className="row justify-content-center mt-3">
+				<div className="row justify-content-center mt-4">
 					<div className="col-12 col-md-5 col-lg-3">
 						<div className="d-grid gap-2">
 							<Button size="lg" variant="primary" onClick={handleShowLogin}>
@@ -91,7 +91,7 @@ const Logout: React.FC = () => {
 					</Modal.Body>
 				</Modal>
 			</div>
-		</>
+		</div>
 	);
 };
 

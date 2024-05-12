@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useAuth } from "@providers/AuthProvider";
 
 interface UserProviderProps {
 	children: React.ReactElement;
@@ -26,6 +27,11 @@ const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 	const [user, setUser] = useState(
 		JSON.parse(localStorage.getItem("user") as string)
 	);
+	const { accessToken, refreshToken } = useAuth();
+
+	useEffect((): void => {
+		(!accessToken || !refreshToken) && setUser(null);
+	}, [accessToken, refreshToken]);
 
 	useEffect((): void => {
 		user

@@ -12,7 +12,7 @@ import {
 	AuthContext,
 	AuthAPICallParams,
 } from "@providers/AuthProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ReactComponent as LogoImg } from "@img/logo.svg";
 import { Link } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const Navbar = () => {
 	const { user, setUser }: UserContext = useUser();
 	const { accessToken, authApiCall }: AuthContext = useAuth();
 	const navigate = useNavigate();
+	const [showOffcanvas, setShowOffcanvas] = useState(false);
 
 	useEffect((): void => {
 		if (accessToken) {
@@ -53,13 +54,17 @@ const Navbar = () => {
 					/>{" "}
 					Twitter
 				</BootstrapNavbar.Brand>
-				<BootstrapNavbar.Toggle aria-controls={"offcanvasNavbar"} />
+				<BootstrapNavbar.Toggle
+					aria-controls={"offcanvasNavbar"}
+					onClick={() => setShowOffcanvas(true)}
+				/>
 				<BootstrapNavbar.Offcanvas
 					id={"offcanvasNavbar"}
 					aria-labelledby={"offcanvasNavbarLabel"}
 					placement="end"
+					show={showOffcanvas}
 				>
-					<Offcanvas.Header closeButton>
+					<Offcanvas.Header closeButton onHide={() => setShowOffcanvas(false)}>
 						<Offcanvas.Title id={"offcanvasNavbarLabel"}>
 							<LogoImg
 								height={30}
@@ -80,6 +85,10 @@ const Navbar = () => {
 										align="end"
 										className="d-md-node"
 									>
+										<NavDropdown.Item onClick={() => navigate("/")}>
+											Homepage
+										</NavDropdown.Item>
+										<NavDropdown.Divider />
 										<NavDropdown.Item onClick={() => navigate("profile/")}>
 											Profile
 										</NavDropdown.Item>
@@ -96,12 +105,21 @@ const Navbar = () => {
 							{user && (
 								<>
 									<p className="text-center">Signed in as: {user.username}</p>
-									<Nav.Item>
+									<Nav.Item onClick={() => setShowOffcanvas(false)}>
+										<Link className="d-flex" to="/">
+											Homepage
+										</Link>
+									</Nav.Item>
+									<hr />
+									<Nav.Item onClick={() => setShowOffcanvas(false)}>
 										<Link className="d-flex" to="profile/">
 											Profile
 										</Link>
 									</Nav.Item>
-									<Nav.Item className="mt-2">
+									<Nav.Item
+										onClick={() => setShowOffcanvas(false)}
+										className="mt-2"
+									>
 										<Link className="d-flex" to="logout/">
 											Logout
 										</Link>

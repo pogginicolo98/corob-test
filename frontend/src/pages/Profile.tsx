@@ -62,26 +62,31 @@ const Profile: React.FC<{}> = () => {
 	return (
 		<div className="text-center">
 			<h1>Profile</h1>
-			<div className="mt-4">
-				<Button variant="success" onClick={() => setShowNewPostForm(true)}>
-					New post
-				</Button>
-				{showNewPostForm && (
-					<NewPostForm
-						className="mt-3"
-						onSuccess={() => {
-							retrievePostlist();
-							setShowNewPostForm(false);
-						}}
-						onReset={() => setShowNewPostForm(false)}
-					/>
+			<div className="mt-5">
+				{!showNewPostForm ? (
+					<Button variant="success" onClick={() => setShowNewPostForm(true)}>
+						New post
+					</Button>
+				) : (
+					<div className="row justify-content-center">
+						<div className="col-12 col-md-9 col-lg-7 col-xl-6">
+							<NewPostForm
+								className="mt-3"
+								onSuccess={() => {
+									retrievePostlist();
+									setShowNewPostForm(false);
+								}}
+								onReset={() => setShowNewPostForm(false)}
+							/>
+						</div>
+					</div>
 				)}
 				{postList?.length > 0 ? (
 					<>
-						<h3 className="mt-4 mb-3">Your posts</h3>
+						<h4 className="mt-4 mb-3">Your posts</h4>
 						{postList.map((post) => (
 							<div key={nanoid()} className="row justify-content-center">
-								<div className="col-5">
+								<div className="col-12 col-md-8 col-lg-6 col-xl-5">
 									<Post
 										className="mb-3"
 										id={post.id}
@@ -97,7 +102,7 @@ const Profile: React.FC<{}> = () => {
 						))}
 					</>
 				) : (
-					<h2 className="mt-4">You haven't created any posts yet</h2>
+					<h4 className="mt-4">You haven't created any posts yet</h4>
 				)}
 			</div>
 		</div>

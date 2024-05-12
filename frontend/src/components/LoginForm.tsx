@@ -81,7 +81,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onReset }) => {
 						<Button type="submit" variant="primary">
 							Login
 						</Button>
-						<Button type="reset" variant="primary">
+						<Button type="reset" variant="outline-primary">
 							Cancel
 						</Button>
 					</div>
