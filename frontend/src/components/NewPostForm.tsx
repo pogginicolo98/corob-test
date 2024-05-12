@@ -57,7 +57,7 @@ const NewPostForm: React.FC<PostProps> = ({
 			thenCallback,
 			catchCallback,
 		};
-		authApiCall("/api/post/", authApiCallParams);
+		authApiCall("/api/post/user", authApiCallParams);
 	});
 
 	return (

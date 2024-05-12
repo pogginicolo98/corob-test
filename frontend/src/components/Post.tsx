@@ -15,7 +15,7 @@ interface PostProps {
 	id: number;
 	author: string;
 	content: string;
-	hidden: boolean;
+	hidden?: boolean;
 	created_at: string;
 	editable: boolean;
 	onSuccess?: () => void;
@@ -38,14 +38,17 @@ const Post: React.FC<PostProps> = ({
 	editable,
 	onSuccess,
 }) => {
-	const methods = useForm({
-		defaultValues: {
-			content,
-			hidden,
-		},
-	});
+	const methods = useForm(
+		editable
+			? {
+					defaultValues: {
+						content,
+						hidden,
+					},
+			  }
+			: undefined
+	);
 	const { authApiCall }: AuthContext = useAuth();
-	const { user }: UserContext = useUser();
 	const [genericError, setGenericError] = useState();
 	const [editEnabled, setEditEnabled] = useState(false);
 
@@ -78,7 +81,7 @@ const Post: React.FC<PostProps> = ({
 			thenCallback,
 			catchCallback,
 		};
-		authApiCall(`/api/post/${id}/`, authApiCallParams);
+		authApiCall(`/api/post/user/${id}/`, authApiCallParams);
 	});
 
 	return (

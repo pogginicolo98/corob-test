@@ -57,7 +57,7 @@ const Home: React.FC = () => {
 			thenCallback,
 			catchCallback,
 		};
-		authApiCall("/api/post", requestApiCall);
+		authApiCall("/api/post/public", requestApiCall);
 	};
 
 	useEffect(() => {
@@ -85,7 +85,6 @@ const Home: React.FC = () => {
 												id={post.id}
 												author={post.author}
 												content={post.content}
-												hidden={post.hidden}
 												created_at={post.created_at}
 												editable={false}
 											/>

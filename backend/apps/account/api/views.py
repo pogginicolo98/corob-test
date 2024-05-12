@@ -39,11 +39,11 @@ class UserAPIView(APIView):
 
     def get(self, request):
         user = {
+            "id": request.user.id,
             "username": request.user.username,
             "email": request.user.email,
             "first_name": request.user.first_name,
             "last_name": request.user.last_name,
-            "is_staff": request.user.is_staff,
         }
         return Response(data=user, status=status.HTTP_200_OK)
 

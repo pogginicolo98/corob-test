@@ -48,7 +48,7 @@ const Profile: React.FC = () => {
 			thenCallback,
 			catchCallback,
 		};
-		authApiCall(`/api/post/user/${user?.id}`, requestApiCall);
+		authApiCall(`/api/post/user`, requestApiCall);
 	};
 
 	useEffect(() => {
