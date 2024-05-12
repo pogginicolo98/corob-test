@@ -1,4 +1,4 @@
-from json import loads as json_load
+from json import loads as json_loads
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -39,7 +39,7 @@ class LogoutAPIViewTestCase(APITestCase):
         login_url = reverse('token_obtain_pair')
         payload = {'username': username, 'password': password}
         response = self.client.post(login_url, data=payload, format='json')
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Save JWT tokens for authentication during test
         self.access_token = response_data['access']
@@ -58,7 +58,7 @@ class LogoutAPIViewTestCase(APITestCase):
         # Make the request for logout as authenticated user
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         response = self.client.post(self.logout_url, format='json')
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Assertion for a failing logout cause invalid refresh token
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -69,7 +69,7 @@ class LogoutAPIViewTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         payload = {'token': self.refresh_token}
         response = self.client.post(self.logout_url, data=payload, format='json')
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Assertion for a failing logout cause invalid refresh token
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -80,7 +80,7 @@ class LogoutAPIViewTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         payload = {'refresh': 'invalid_refresh_token'}
         response = self.client.post(self.logout_url, data=payload, format='json')
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Assertion for a failing logout cause invalid refresh token
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -118,8 +118,8 @@ class UserAPIViewTestCase(APITestCase):
         password = 'Change_me_123!'
         first_name = 'anon name'
         last_name = 'anon surname'
-        email = 'anon email'
-        UserModel.objects.create_user(
+        email = 'anon@django.org'
+        user = UserModel.objects.create_user(
             username=username,
             password=password,
             first_name=first_name,
@@ -131,24 +131,24 @@ class UserAPIViewTestCase(APITestCase):
         login_url = reverse('token_obtain_pair')
         payload = {'username': username, 'password': password}
         response = self.client.post(login_url, data=payload, format='json')
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Save JWT tokens for authentication during test
         self.access_token = response_data['access']
         self.refresh_token = response_data['refresh']
         self.user_data = {
+            'id': user.id,
             'username': username,
             'email': email,
             'first_name': first_name,
             'last_name': last_name,
-            'is_staff': False,
         }
 
     def test_retrieve_user_successful(self):
         # Make the request for logout as authenticated user
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
         response = self.client.get(self.user_url)
-        response_data = json_load(response.content)
+        response_data = json_loads(response.content)
 
         # Assertion for a successful retrieve user
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -91,7 +91,9 @@ const Home: React.FC<{}> = () => {
 								))}
 							</>
 						) : (
-							<h2>Currently, there are no posts available</h2>
+							<h4 className="mt-4 mb-3">
+								Currently, there are no posts available...
+							</h4>
 						)}
 					</>
 				) : (

@@ -27,7 +27,6 @@ urlpatterns = [
         'api/',
         include(
             [
-                path('', include('apps.core.api.urls')),
                 path('account/', include('apps.account.api.urls')),
                 path('post/', include('apps.post.api.urls')),
             ]
