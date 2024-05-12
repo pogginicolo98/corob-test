@@ -120,7 +120,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -182,3 +181,4 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 
 backend/override.env
+frontend/.env.local
