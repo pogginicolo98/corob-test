@@ -59,3 +59,177 @@ class PostTestCase(TestCase):
 
         # Assertion for truncated string representation
         self.assertEqual(post.__str__(), post.content[:17] + '...')
+
+    def test_get_created_at(self):
+        # Create a new post
+        post = Post.objects.create(author=self.user, content='test_content', hidden=False)
+
+        # Assertion for truncated string representation
+        self.assertEqual(post.get_created_at(), post.created_at.strftime('%d %B %Y'))
+
+
+class PublicPostsAPIViewTestCase(APITestCase):
+    """
+    PublicPostsAPIView viewset test case.
+
+    supported methods:
+    - List
+        cases:
+        - List public posts with existing user's public post
+        - List public posts with existing other user's public post
+        - List public posts with hidden user's post
+        - List public posts with hidden other user's post
+        - List public posts without existing posts
+        - List public posts not authenticated
+    """
+
+    public_posts_url = reverse('public-posts-list')
+
+    def setUp(self):
+        """
+        Initial setup that will be performed before each test
+        """
+
+        # Create a new user
+        username = 'anon'
+        password = 'Change_me_123!'
+        first_name = 'name'
+        last_name = 'surname'
+        email = 'anon@django.org'
+        user = UserModel.objects.create_user(
+            username=username,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+        )
+
+        # Make the request for login with user and retrieve JWT tokens
+        login_url = reverse('token_obtain_pair')
+        payload = {'username': username, 'password': password}
+        response = self.client.post(login_url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Save JWT tokens for authentication during test
+        self.access_token = response_data['access']
+        self.refresh_token = response_data['refresh']
+        self.user = user
+
+    def test_list_public_posts_with_existing_user_public_post(self):
+        # Create a new user's public post
+        post = Post.objects.create(author=self.user, content='test_content', hidden=False)
+
+        # Make the request for public post list
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a successful list of public posts
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data['results'],
+            [
+                {
+                    'id': post.id,
+                    'author': post.author.username,
+                    'content': post.content,
+                    'created_at': post.get_created_at(),
+                }
+            ],
+        )
+        self.assertEqual(post.hidden, False)
+
+    def test_list_public_posts_with_existing_other_user_public_post(self):
+        # Create a new other user's public post
+        user = UserModel.objects.create_user(
+            username='some_user',
+            password='Change_me_123!',
+            first_name='name',
+            last_name='surname',
+            email='some_user@django.org',
+        )
+        post = Post.objects.create(author=user, content='test_content', hidden=False)
+
+        # Make the request for public post list
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a successful list of public posts
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data['results'],
+            [
+                {
+                    'id': post.id,
+                    'author': post.author.username,
+                    'content': post.content,
+                    'created_at': post.get_created_at(),
+                }
+            ],
+        )
+        self.assertNotEqual(post.author, self.user)
+        self.assertEqual(post.hidden, False)
+
+    def test_list_public_posts_with_hidden_user_post(self):
+        # Create a new user's hidden post
+        post = Post.objects.create(author=self.user, content='test_content', hidden=True)
+
+        # Make the request for public post list
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a successful list of public posts that not include hidden posts
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data['results'],
+            [],
+        )
+        self.assertEqual(post.hidden, True)
+
+    def test_list_public_posts_with_hidden_other_user_post(self):
+        # Create a new other user's hidden post
+        user = UserModel.objects.create_user(
+            username='some_user',
+            password='Change_me_123!',
+            first_name='name',
+            last_name='surname',
+            email='some_user@django.org',
+        )
+        post = Post.objects.create(author=user, content='test_content', hidden=True)
+
+        # Make the request for public post list
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a successful list of public posts that not include hidden posts
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data['results'],
+            [],
+        )
+        self.assertNotEqual(post.author, self.user)
+        self.assertEqual(post.hidden, True)
+
+    def test_list_public_posts_without_existing_posts(self):
+        # Make the request for public post list without existing posts
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a successful empty list of public posts
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data['results'],
+            [],
+        )
+        self.assertEqual(Post.objects.all().count(), 0)
+
+    def test_list_public_posts_without_authentication(self):
+        # Make the request for public posts list without authentication
+        response = self.client.get(self.public_posts_url)
+
+        # Assertion for unauthorized request
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -48,4 +48,4 @@ class UserPostSerializer(serializers.ModelSerializer):
         exclude = ['updated_at']
 
     def get_created_at(self, instance):
-        return instance.created_at.strftime('%d %B %Y')
+        return instance.get_created_at()

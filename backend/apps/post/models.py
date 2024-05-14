@@ -19,3 +19,6 @@ class Post(models.Model):
     def __str__(self):
         content = self.content[:17] + '...' if len(self.content) > 17 else self.content
         return f"{content}"
+
+    def get_created_at(self):
+        return self.created_at.strftime('%d %B %Y')
