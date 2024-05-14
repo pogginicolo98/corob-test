@@ -230,9 +230,11 @@ class PublicPostsAPIViewTestCase(APITestCase):
     def test_list_public_posts_without_authentication(self):
         # Make the request for public posts list without authentication
         response = self.client.get(self.public_posts_url)
+        response_data = json_loads(response.content)
 
         # Assertion for unauthorized request
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')
 
 
 class UserPostsAPIViewTestCase(APITestCase):
@@ -255,21 +257,22 @@ class UserPostsAPIViewTestCase(APITestCase):
         - list user's posts not authenticated
     - Update
         cases:
-        - update content of user's post
-        - update hidden of user's post
-        - update post that don't exists
+        - update user's post
+        - partial update, content of user's post
+        - partial update, hidden of user's post
+        - update post that doesn't exist
         - update other user's post
         - update user's post not authenticated
     - Delete
         cases:
         - delete user's post
-        - delete post that don't exists
+        - delete post that doesn't exist
         - delete other user's post
         - delete user's post not authenticated
     """
 
     user_posts_list_url = reverse('user-posts-list')
-    user_posts_detail_url_name = reverse('user-posts-detail', kwargs={'pk': 1})
+    user_posts_detail_url_name = 'user-posts-detail'
 
     def setUp(self):
         """
@@ -340,9 +343,11 @@ class UserPostsAPIViewTestCase(APITestCase):
         # Make the request for create a new post
         payload = {'content': 'test_content', 'hidden': False}
         response = self.client.post(self.user_posts_list_url, data=payload, format='json')
+        response_data = json_loads(response.content)
 
-        # Assertion for a failing post creation
+        # Assertion for unauthorized request
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')
 
     def test_list_user_public_post(self):
         # Create a new user's public post
@@ -470,6 +475,207 @@ class UserPostsAPIViewTestCase(APITestCase):
         # Make the request for list user's post without authentication
         payload = {'content': 'test_content', 'hidden': False}
         response = self.client.get(self.user_posts_list_url, data=payload, format='json')
+        response_data = json_loads(response.content)
 
-        # Assertion for a failing user's posts list request
+        # Assertion for unauthorized request
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')
+
+    def test_update_user_post(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for update post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        payload = {'content': 'changed_content', 'hidden': True}
+        response = self.client.put(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Retrive updated post
+        updated_post = Post.objects.get(pk=post.id)
+
+        # Assertion for a successful post update
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data,
+            {
+                'id': post.id,
+                'author': post.author.username,
+                'content': payload['content'],
+                'hidden': payload['hidden'],
+                'created_at': post.get_created_at(),
+            },
+        )
+        self.assertEqual(updated_post.author, self.user)
+        self.assertEqual(updated_post.content, payload['content'])
+        self.assertEqual(updated_post.hidden, payload['hidden'])
+        self.assertEqual(updated_post.created_at, post.created_at)
+
+    def test_partial_update_content_of_user_post(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for update post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        payload = {'content': 'changed_content'}
+        response = self.client.patch(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Retrive updated post
+        updated_post = Post.objects.get(pk=post.id)
+
+        # Assertion for a successful partial post update
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data,
+            {
+                'id': post.id,
+                'author': post.author.username,
+                'content': payload['content'],
+                'hidden': post.hidden,
+                'created_at': post.get_created_at(),
+            },
+        )
+        self.assertEqual(updated_post.author, self.user)
+        self.assertEqual(updated_post.content, payload['content'])
+        self.assertEqual(updated_post.hidden, False)
+        self.assertEqual(updated_post.created_at, post.created_at)
+
+    def test_partial_update_hidden_of_user_post(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for update post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        payload = {'hidden': True}
+        response = self.client.patch(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Retrive updated post
+        updated_post = Post.objects.get(pk=post.id)
+
+        # Assertion for a successful partial post update
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response_data,
+            {
+                'id': post.id,
+                'author': post.author.username,
+                'content': post.content,
+                'hidden': payload['hidden'],
+                'created_at': post.get_created_at(),
+            },
+        )
+        self.assertEqual(updated_post.author, self.user)
+        self.assertEqual(updated_post.content, post.content)
+        self.assertEqual(updated_post.hidden, payload['hidden'])
+        self.assertEqual(updated_post.created_at, post.created_at)
+
+    def test_update_post_that_does_not_exist(self):
+        # Make the request for update post that does not exist
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': 1})
+        payload = {'content': 'changed_content', 'hidden': True}
+        response = self.client.put(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Assertion for a failing posts update
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_data['detail'], 'No Post matches the given query.')
+
+    def test_update_other_user_post(self):
+        # Create a new other user's post
+        user = UserModel.objects.create_user(
+            username='some_user',
+            password='Change_me_123!',
+            first_name='name',
+            last_name='surname',
+            email='some_user@django.org',
+        )
+        post = Post.objects.create(author=user, content='content_to_change', hidden=False)
+
+        # Make the request for update other user's post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        payload = {'content': 'changed_content', 'hidden': True}
+        response = self.client.put(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Assertion for a failing posts update
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_data['detail'], 'No Post matches the given query.')
+
+    def test_update_post_not_authenticated(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for update post without authentication
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        payload = {'content': 'changed_content', 'hidden': True}
+        response = self.client.put(url, data=payload, format='json')
+        response_data = json_loads(response.content)
+
+        # Assertion for unauthorized request
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')
+
+    def test_delete_user_post(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for delete post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        response = self.client.delete(url)
+
+        # Assertion for a successful post delete
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Post.objects.filter(pk=post.id).exists(), False)
+
+    def test_delete_post_that_does_not_exist(self):
+        # Make the request for delete post that does not exist
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': 1})
+        response = self.client.delete(url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a failing posts delete
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_data['detail'], 'No Post matches the given query.')
+
+    def test_delete_other_user_post(self):
+        # Create a new other user's post
+        user = UserModel.objects.create_user(
+            username='some_user',
+            password='Change_me_123!',
+            first_name='name',
+            last_name='surname',
+            email='some_user@django.org',
+        )
+        post = Post.objects.create(author=user, content='content_to_change', hidden=False)
+
+        # Make the request for delete other user's post
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        response = self.client.delete(url)
+        response_data = json_loads(response.content)
+
+        # Assertion for a failing posts delete
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response_data['detail'], 'No Post matches the given query.')
+
+    def test_delete_post_not_authenticated(self):
+        # Create a new user's post
+        post = Post.objects.create(author=self.user, content='content_to_change', hidden=False)
+
+        # Make the request for elete post without authentication
+        url = reverse(self.user_posts_detail_url_name, kwargs={'pk': post.id})
+        response = self.client.delete(url)
+        response_data = json_loads(response.content)
+
+        # Assertion for unauthorized request
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')

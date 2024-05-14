@@ -24,7 +24,7 @@ class PublicPostSerializer(serializers.ModelSerializer):
         exclude = ['hidden', 'updated_at']
 
     def get_created_at(self, instance):
-        return instance.created_at.strftime('%d %B %Y')
+        return instance.get_created_at()
 
 
 class UserPostSerializer(serializers.ModelSerializer):
