@@ -679,3 +679,7 @@ class UserPostsAPIViewTestCase(APITestCase):
         # Assertion for unauthorized request
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(response_data['detail'], 'Authentication credentials were not provided.')
+
+
+# TODO Add unit tests for PublicPostSerializer
+# TODO Add unit tests for UserPostSerializer

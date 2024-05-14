@@ -382,3 +382,6 @@ class RegisterAPIViewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response_data['last_name'], ['This field is required.'])
+
+
+# TODO Add unit tests for RegisterSerializer
