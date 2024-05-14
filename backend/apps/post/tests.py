@@ -2,8 +2,6 @@ from json import loads as json_loads
 from random import choice
 from string import ascii_uppercase
 
-''.join(choice(ascii_uppercase) for i in range(12))
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
