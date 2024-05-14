@@ -17,5 +17,5 @@ class Post(models.Model):
         ordering = ['-updated_at']
 
     def __str__(self):
-        content = self.content[:20] + '...' if len(self.content) > 20 else ''
+        content = self.content[:17] + '...' if len(self.content) > 17 else self.content
         return f"{content}"
