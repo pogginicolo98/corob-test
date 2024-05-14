@@ -78,7 +78,7 @@ const Post: React.FC<PostProps> = ({
 		};
 
 		const authApiCallParams: AuthAPICallParams = {
-			method: "PUT",
+			method: "PATCH",
 			data: data as PostUpdateData,
 			thenCallback,
 			catchCallback,
